@@ -133,7 +133,9 @@ namespace CustomerTests
             // Assert
             Assert.NotNull(customers);
             var customerJane = customers[0];
+            var customerSom = customers[1];
             Assert.Same(customerJane.FirstName, "Jane");
+            Assert.Same(customerSom.LastName, "Somasundaram");
         }
 
     }
