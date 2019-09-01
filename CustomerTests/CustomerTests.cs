@@ -124,7 +124,7 @@ namespace CustomerTests
             var controller = new CustomerController(dbContext);
             
             // Act
-            var response = await controller.FindCustomersAsync("Jane");
+            var response = await controller.FindCustomersAsync("Jane" , "Somasundaram");
             var customers = response.Value as List<Customer>;
 
             //dispose dbcntext

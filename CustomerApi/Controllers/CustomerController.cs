@@ -38,21 +38,32 @@ namespace CustomerApi.Controllers
 
         [HttpGet]
         [Route("index")]
-        public async Task<ActionResult<IEnumerable<Customer>>> FindCustomersAsync([FromQuery(Name = "firstorlast")] string name)
+        public async Task<ActionResult<IEnumerable<Customer>>> FindCustomersAsync([FromQuery] string firstName , [FromQuery]string lastName)
         {
             var customers = from cust in _context.Customers
                          select cust;
-            if (!String.IsNullOrEmpty(name))
+            IQueryable<Customer> firstNameCust = null;
+            IQueryable<Customer> lastNameCust = null;
+;            if (!String.IsNullOrEmpty(firstName))
             {
-                customers = customers.Where(s => s.FirstName.Contains(name));
+                firstNameCust = customers.Where(s => s.FirstName.Contains(firstName));
             }
 
-            if(customers == null)
+            if (!String.IsNullOrEmpty(lastName))
+            {
+                lastNameCust = customers.Where(s => s.LastName.Contains(lastName));
+            }
+
+            var firstNameList = await firstNameCust.ToListAsync();
+            var lastNameList = await lastNameCust.ToListAsync();
+            var concatList = firstNameList.Concat(lastNameList);
+
+            if (!concatList.Any())
             {
                 return NoContent();
             }
 
-            return (await customers.ToListAsync());
+            return concatList.ToList();
         }
 
 
