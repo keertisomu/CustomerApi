@@ -10,12 +10,7 @@ namespace CustomerTests
 {
     public class CustomerTests
     {
-        [Fact]
-        public void PassingTest()
-        {
-            Assert.Equal(4, 2+2);
-        }
-
+       
         [Fact]
         public async Task TestGetCustomersAsync()
         {
@@ -25,7 +20,7 @@ namespace CustomerTests
             var controller = new CustomerController(dbContext);
 
             // Act
-            var response = await controller.GetCustomers();
+            var response = await controller.GetCustomersAsync();
             
             //dispose dbcntext
             dbContext.Dispose();
@@ -45,7 +40,7 @@ namespace CustomerTests
             var customerId = 3;
 
             // Act
-            var response = await controller.GetCustomer(customerId);
+            var response = await controller.GetCustomerAsync(customerId);
             var customerObj = response.Value;
 
             //dispose dbcntext
@@ -75,7 +70,7 @@ namespace CustomerTests
 
             // Act
 
-            var response = await controller.PostCustomer(customer);
+            var response = await controller.AddCustomerAsync(customer);
             CreatedAtActionResult result = response.Result as CreatedAtActionResult;
             var statusCode = result.StatusCode;
             var customerVal = result.Value as Customer;
@@ -103,14 +98,14 @@ namespace CustomerTests
 
             // Act
 
-            var response = await controller.GetCustomer(customerId);
+            var response = await controller.GetCustomerAsync(customerId);
             var customerObj = response.Value as Customer;
 
             //edit customer values
             customerObj.LastName = "Smith";
             customerObj.DateOfBirth = Convert.ToDateTime("1986-11-21T00: 00:00");
 
-            var editResponse = await controller.PutCustomer(customerId, customerObj) as NoContentResult; 
+            var editResponse = await controller.UpdateCustomerAsync(customerId, customerObj) as NoContentResult; 
 
             //dispose dbcntext
             dbContext.Dispose();
@@ -127,13 +122,10 @@ namespace CustomerTests
             // Arrange
             var dbContext = DbContextMocker.GetCustomerContext(nameof(TestGetCustomersAsync));
             var controller = new CustomerController(dbContext);
-            var customerId = 4;
-
-            // Act
-
-            var response = await controller.FindCustomers("Jane");
-            var customers = response.Value as List<Customer>;
             
+            // Act
+            var response = await controller.FindCustomersAsync("Jane");
+            var customers = response.Value as List<Customer>;
 
             //dispose dbcntext
             dbContext.Dispose();
